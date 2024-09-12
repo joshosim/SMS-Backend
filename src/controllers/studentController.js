@@ -1,4 +1,5 @@
 const Student = require("../models/studentModel");
+const mongoose = require("mongoose");
 
 const getStudentsInJss1 = async (req, res) => {
   try {
@@ -40,20 +41,18 @@ const getStudentsInJss3 = async (req, res) => {
   }
 };
 const getStudent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ error: "No such student" });
-    }
-
-    const student = await Student.findById(id);
-    res.status(200).json(student);
-  } catch (err) {
-    res.status(404).json({ err: "Student not found!" });
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such student" });
+  }
+  const student = await Student.findById(id);
+  if (!student) {
+    return res.status(404).json({ err: "Student not found!" });
   }
 
   res.status(200).json(student);
 };
+
 const addNewStudent = async (req, res) => {
   const { name, age, dob, stateOfOrigin, studentClass } = req.body;
 

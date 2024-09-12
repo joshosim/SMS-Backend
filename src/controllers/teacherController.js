@@ -1,9 +1,14 @@
 const Teacher = require("../models/teacherModel");
 
 const getTeachers = async (req, res) => {
-  const teachers = await Teacher.find({}).sort({ createdAt: -1 });
+  try {
+    const teachers = await Teacher.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(teachers);
+    res.status(200).json(teachers);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching teachers", error });
+    console.log(error);
+  }
 };
 
 const getTeacher = async (req, res) => {};
