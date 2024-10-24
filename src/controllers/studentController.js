@@ -1,6 +1,19 @@
 const Student = require("../models/studentModel");
 const mongoose = require("mongoose");
 
+//get all students in the school
+const getAllStudents = async (req, res) => {
+  try {
+    const allStudents = await Student.find({}).sort({ createdAt: -1 });
+    res.status(200).json(allStudents);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching all students in the school", error });
+    console.log(error);
+  }
+};
+
 const getStudentsInJss1 = async (req, res) => {
   try {
     // Fetch students where the studentClass is 'jss1'
@@ -103,5 +116,6 @@ module.exports = {
   getStudent,
   addNewStudent,
   deleteStudent,
+  getAllStudents,
   updateStudent,
 };
