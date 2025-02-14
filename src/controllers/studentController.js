@@ -147,8 +147,51 @@ const addNewStudent = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-const deleteStudent = async (req, res) => { };
-const updateStudent = async (req, res) => { };
+
+const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+
+  //check if the 'id' is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid student ID' })
+  }
+
+  try {
+    //find and delete the student
+    const deletedStudent = await Student.findByIdAndDelete(id);
+
+    if (!deletedStudent) {
+      return res.status(404).json({ error: 'Student not found!' })
+    }
+
+    res.status(200).json({ message: 'Student deleted successfully', deletedStudent })
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting student', details: error.message })
+  }
+};
+const updateStudent = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid Student ID' })
+  }
+
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(id,
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      return res.status(404).json({ error: 'Student not found' })
+    }
+
+    res.status(200).json({ message: 'Student updated successfully', updatedStudent })
+
+  } catch (error) {
+    res.status(500).json({ error: "Error updating student", details: error.message });
+  }
+};
 
 module.exports = {
   getStudentsInJss1,

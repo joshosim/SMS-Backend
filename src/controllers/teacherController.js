@@ -59,12 +59,54 @@ const addNewTeacher = async (req, res) => {
     return res.status(400).json({ err: err.message });
   }
 };
+
 const deleteTeacher = async (req, res) => {
-  const teacher = await Teacher.findById({})
+  const { id } = req.params;
 
+  //check if the 'id' is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      error: "Invalid teacher's ID"
+    })
+  }
+
+  try {
+
+    const deletedTeacher = await Teacher.findByIdAndDelete(id);
+
+    if (!deletedTeacher) {
+      return res.status(404).json({ error: 'Teacher not found!' })
+    }
+
+    res.status(200).json({ message: 'Teacher deleted successfully', deletedTeacher })
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting teacher', details: error.message })
+  }
 };
-const updateTeacher = async (req, res) => { };
 
+const updateTeacher = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid Teacher ID' })
+  }
+
+  try {
+    const updatedTeacher = await Teacher.findByIdAndUpdate(id,
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTeacher) {
+      return res.status(404).json({ error: 'Teacher not found' })
+    }
+
+    res.status(200).json({ message: 'Teacher updated successfully', updatedTeacher })
+
+  } catch (error) {
+    res.status(500).json({ error: "Error updating teacher", details: error.message });
+  }
+};
 module.exports = {
   getTeachers,
   getTeacher,
