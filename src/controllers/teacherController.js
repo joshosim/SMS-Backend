@@ -11,7 +11,7 @@ const getTeachers = async (req, res) => {
   }
 };
 
-const getTeacher = async (req, res) => {};
+const getTeacher = async (req, res) => { };
 
 const addNewTeacher = async (req, res) => {
   const { name, email, state_oforigin, subject, account_number, bank_name } =
@@ -59,8 +59,11 @@ const addNewTeacher = async (req, res) => {
     return res.status(400).json({ err: err.message });
   }
 };
-const deleteTeacher = async (req, res) => {};
-const updateTeacher = async (req, res) => {};
+const deleteTeacher = async (req, res) => {
+  const teacher = await Teacher.findById({})
+
+};
+const updateTeacher = async (req, res) => { };
 
 module.exports = {
   getTeachers,

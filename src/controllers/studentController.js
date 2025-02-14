@@ -40,6 +40,7 @@ const getStudentsInJss2 = async (req, res) => {
     console.log(error);
   }
 };
+
 const getStudentsInJss3 = async (req, res) => {
   try {
     // Fetch students where the studentClass is 'jss3'
@@ -53,6 +54,46 @@ const getStudentsInJss3 = async (req, res) => {
     console.log(error);
   }
 };
+const getStudentsInSss3 = async (req, res) => {
+  try {
+    // Fetch students where the studentClass is 'jss3'
+    const studentsInSss3 = await Student.find({ studentClass: "SSS3" }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(studentsInSss3);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching students in SSS3", error });
+    console.log(error);
+  }
+};
+const getStudentsInSss2 = async (req, res) => {
+  try {
+    // Fetch students where the studentClass is 'jss3'
+    const studentsInSss2 = await Student.find({ studentClass: "SSS2" }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(studentsInSss2);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching students in SSS2", error });
+    console.log(error);
+  }
+};
+const getStudentsInSss1 = async (req, res) => {
+  try {
+    // Fetch students where the studentClass is 'jss3'
+    const studentsInSss1 = await Student.find({ studentClass: "SSS1" }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(studentsInSss1);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching students in SSS1", error });
+    console.log(error);
+  }
+};
+
 const getStudent = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -106,13 +147,16 @@ const addNewStudent = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-const deleteStudent = async (req, res) => {};
-const updateStudent = async (req, res) => {};
+const deleteStudent = async (req, res) => { };
+const updateStudent = async (req, res) => { };
 
 module.exports = {
   getStudentsInJss1,
   getStudentsInJss2,
   getStudentsInJss3,
+  getStudentsInSss1,
+  getStudentsInSss2,
+  getStudentsInSss3,
   getStudent,
   addNewStudent,
   deleteStudent,
