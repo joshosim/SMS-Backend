@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const studentSchema = new Schema(
   {
-    name: {
+    firstname: {
       type: String,
       required: true,
     },
-    age: {
-      type: Number,
+    lastname: {
+      type: String,
       required: true,
     },
     dob: {
@@ -24,6 +24,13 @@ const studentSchema = new Schema(
       type: String,
       required: true,
     },
+    guardianPhone: {
+      type: [String],
+      default: []
+    },
+    studentPicture: {
+      type: String
+    }
   },
   { timestamps: true }
 );

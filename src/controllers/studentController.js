@@ -1,5 +1,13 @@
+
 const Student = require("../models/studentModel");
 const mongoose = require("mongoose");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+})
+
 
 //get all students in the school
 const getAllStudents = async (req, res) => {
@@ -108,41 +116,44 @@ const getStudent = async (req, res) => {
 };
 
 const addNewStudent = async (req, res) => {
-  const { name, age, dob, stateOfOrigin, studentClass } = req.body;
-
-  let emptyFields = [];
-
-  if (!name) {
-    emptyFields.push("name");
-  }
-  if (!age) {
-    emptyFields.push("age");
-  }
-  if (!dob) {
-    emptyFields.push("dob");
-  }
-  if (!stateOfOrigin) {
-    emptyFields.push("stateOfOrigin");
-  }
-  if (!studentClass) {
-    emptyFields.push("studentClass");
-  }
-
-  if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({ error: "Please fill all the fields ", emptyFields });
-  }
-
   try {
+    const requiredFields = [
+      "firstname",
+      "lastname",
+      "dob",
+      "stateOfOrigin",
+      "studentClass",
+      "guardianPhone",
+      "studentPicture"
+    ]
+
+    let emptyFields = requiredFields.filter(field => !req.body[field])
+
+    if (emptyFields.length > 0) {
+      return res
+        .status(400)
+        .json({ error: "Please fill all the fields ", emptyFields });
+    }
+
+    let studentPictureUrl = '';
+    if (req.body.studentPicture) {
+      const uploadedResponse = await cloudinary.uploader.upload(req.body.studentPicture, {
+        folder: 'students',
+        resource_type: 'image'
+      });
+      studentPictureUrl = uploadedResponse.secure_url;
+    }
+
     const student = await Student.create({
-      name,
-      age,
-      studentClass,
-      dob,
-      stateOfOrigin,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      dob: req.body.dob,
+      stateOfOrigin: req.body.stateOfOrigin,
+      studentClass: req.body.studentClass,
+      guardianPhone: req.body.guardianPhone,
+      studentPicture: studentPictureUrl,
     });
-    res.status(200).json(student);
+    res.status(201).json(student);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

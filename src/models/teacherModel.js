@@ -4,7 +4,11 @@ const Schema = mongoose.Schema;
 
 const teacherSchema = new Schema(
   {
-    name: {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
       type: String,
       required: true,
     },
@@ -17,8 +21,8 @@ const teacherSchema = new Schema(
       required: true,
     },
     subject: {
-      type: String,
-      required: true,
+      type: [String],
+      default: []
     },
     account_number: {
       type: String,
@@ -28,6 +32,13 @@ const teacherSchema = new Schema(
       type: String,
       required: true,
     },
+    picture: {
+      type: String
+    },
+    class: {
+      type: String,
+      default: null
+    }
   },
   { timestamps: true }
 );

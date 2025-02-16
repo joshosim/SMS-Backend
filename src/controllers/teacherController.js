@@ -11,7 +11,9 @@ const getTeachers = async (req, res) => {
   }
 };
 
-const getTeacher = async (req, res) => { };
+const getTeacher = async (req, res) => {
+  const { id } = req.params;
+};
 
 const addNewTeacher = async (req, res) => {
   const { name, email, state_oforigin, subject, account_number, bank_name } =
